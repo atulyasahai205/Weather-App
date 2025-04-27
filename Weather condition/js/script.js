@@ -19,13 +19,15 @@ async function getWeather(city) {
 
     if (city_Value === "") {
         alert("Enter a city name!!");
+        return;
     }
          const api_Key = "926854b0340d02c1841c435341b9be78";
 
          const base_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_Key}&units=metric`;
 
-        const checkData = await fetch(base_URL)
-         .then((response) => response.json())
+        try{
+            const response = await fetch(base_URL);
+            const checkData = await response.json();
 
          if (checkData.cod === `404`) {
             error_Container.style.display = "flex";
@@ -42,6 +44,7 @@ async function getWeather(city) {
             weather_Info.style.display = "flex"
             WCont.style.display = "block"
             cityName.style.display = "inline"
+    
         cityName.innerHTML = [checkData.name]
         temp.innerHTML = [checkData.main.temp] + "<sup>&deg;C"
         humidityTemp.innerHTML = [checkData.main.humidity] + "&percnt;"
@@ -84,8 +87,14 @@ async function getWeather(city) {
                     imgCont.src = "Assets/Fog.png"
                 break;
         }
-
+            
         console.log(checkData)
+            
+        }
+            catch(error){
+            console.log("Error fetching whether data: ", error);
+                alert("Something went wrong! Please try again later.");
+            }
     }
 
 btn.addEventListener("click", () => {
